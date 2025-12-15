@@ -1,38 +1,57 @@
 import { useState, useEffect } from "react";
 import TaskForm from "./TaskForm";
 import { getTasks } from "../utils/storage";
+import DraggableTask from "./DraggableTask";
+import DroppableUser from "./DroppableUser";
 
 const AdminDashboard = () => {
     const [tasks, setTasks] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const refreshTasks = () => {
         setTasks(getTasks());
+        setUsers(getUsers());
     }
 
     useEffect(() => {
         refreshTasks();
     }, []);
 
+    const handleReassign = (taskId, newUserId) => {
+        const updatedTasks = tasks.map(t =>
+            t.id === taskId ? { ...t, assigneeId: newUserId } : t
+        );
+        saveTasks(updatedTasks);
+        refreshData();
+    };
+
     return (
         <div>
             <h2>Admin Dashboard</h2>
             <div>
                 <div>
-                    <TaskForm onTaskAdded={refreshTasks} />
+                    <TaskForm onTaskAdded={refreshData} />
                 </div>
                 <div>
-                    <h3>Current Tasks</h3>
-                    {tasks.length === 0 ? <p>No tasks found.</p> : (
-                        <ul>
-                            {tasks.map(task => (
-                                <li key={task.id}>
-                                    <strong>{task.title}</strong> - <span>{task.status}</span>
-                                    <br />
-                                    <small>Assigned to User ID: {task.assigneeId}</small>
-                                </li>
+                    <div>
+                        <h3>All Tasks (Drag from here)</h3>
+                        {tasks.map(task => (
+                            <DraggableTask key={task.id} task={task} />
+                        ))}
+                    </div>
+                    <div>
+                        <h3>Users (Drop to assign)</h3>
+                        <div>
+                            {users.filter(u => u.role !== 'admin').map(user => (
+                                <DroppableUser
+                                    key={user.id}
+                                    user={user}
+                                    tasks={tasks.filter(t => t.assigneeId === user.id)}
+                                    onDropTask={handleReassign}
+                                />
                             ))}
-                        </ul>
-                    )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
