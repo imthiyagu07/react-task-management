@@ -9,33 +9,33 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 
 const App = () => {
   const { user, logout } = useAuthStore();
+
   useEffect(() => {
     initializeUsers();
   }, []);
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="App">
+      <div className="app-container">
         {!user ? (
           <LoginForm />
         ) : (
-          <div>
-            <header>
+          <>
+            <header className="app-header">
               <h1>Task Manager</h1>
-              <div>
+              <div className="user-info">
                 <span>Welcome, {user.username} ({user.role})</span>
-                <button onClick={logout}>Logout</button>
+                <button className="btn btn-logout" onClick={logout}>Logout</button>
               </div>
             </header>
-            <main>
+            <main className="main-content">
               {user.role === 'admin' ? <AdminDashboard /> : <UserDashboard />}
             </main>
-          </div>
+          </>
         )}
       </div>
     </DndProvider>
   )
-
 }
 
 export default App;

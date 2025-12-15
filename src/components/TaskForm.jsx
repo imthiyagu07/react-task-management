@@ -9,35 +9,34 @@ const TaskForm = ({ onTaskAdded }) => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const users = getUsers();
-        setUsers(users);
+        setUsers(getUsers());
     }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!assigneeId) {
-            alert("please select a user to assign the task.");
+            alert("Please select a user.");
             return;
         }
         const newTask = {
-            if: uuidv4(),
+            id: uuidv4(),
             title,
             description,
             assigneeId,
             status: 'Pending',
-        }
-        const existingTasks = getTasks();
-        const updatedTasks = [...existingTasks, newTask];
+        };
+        const updatedTasks = [...getTasks(), newTask];
         saveTasks(updatedTasks);
         if (onTaskAdded) onTaskAdded(updatedTasks);
+
         setTitle('');
         setDescription('');
         setAssigneeId('');
     }
 
     return (
-        <div>
-            <h3>Create New Task</h3>
+        <div className="task-form-card">
+            <h3 style={{ marginTop: 0 }}>Create New Task</h3>
             <form onSubmit={handleSubmit}>
                 <input type="text" placeholder="Task Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
                 <textarea placeholder="Task Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
@@ -47,10 +46,10 @@ const TaskForm = ({ onTaskAdded }) => {
                         <option key={user.id} value={user.id}>{user.username}</option>
                     ))}
                 </select>
-                <button type="submit">Assign Task</button>
+                <button type="submit" className="btn btn-primary">Create Task</button>
             </form>
         </div>
     )
 }
 
-export default TaskForm
+export default TaskForm;

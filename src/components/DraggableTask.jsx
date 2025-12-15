@@ -1,7 +1,7 @@
 import { useDrag } from 'react-dnd';
 
 const DraggableTask = ({ task }) => {
-    const [drag] = useDrag(() => ({
+    const [{ isDragging }, drag] = useDrag(() => ({
         type: 'TASK',
         item: { id: task.id },
         collect: (monitor) => ({
@@ -10,7 +10,7 @@ const DraggableTask = ({ task }) => {
     }));
 
     return (
-        <div ref={drag}>
+        <div ref={drag} className={`task-card ${isDragging ? 'dragging' : ''}`}>
             <strong>{task.title}</strong>
             <small>{task.status}</small>
         </div>

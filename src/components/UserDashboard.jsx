@@ -13,19 +13,13 @@ const UserDashboard = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      loadMyTasks();
-    }
+    if (user) loadMyTasks();
   }, [user]);
 
   const handleComplete = (taskId) => {
-    const allTasks = getTasks();
-    const updatedTasks = allTasks.map(task => {
-      if (task.id === taskId) {
-        return { ...task, status: 'Completed' };
-      }
-      return task;
-    });
+    const updatedTasks = getTasks().map(task =>
+      task.id === taskId ? { ...task, status: 'Completed' } : task
+    );
     saveTasks(updatedTasks);
     loadMyTasks();
   }
@@ -33,31 +27,22 @@ const UserDashboard = () => {
   return (
     <div>
       <h2>My Tasks</h2>
-      {myTasks.length === 0 ? (
-        <p>No tasks assigned to you yet.</p>
-      ) : (
-        <div>
-          {myTasks.map(task => (
-            <div key={task.id}>
-              <div>
-                <div>
-                  <h3>{task.title}</h3>
-                  <p>{task.description}</p>
-                  <div>
-                    Status: <span>{task.status}</span>
-                  </div>
-                </div>
-
-                {task.status !== 'Completed' && (
-                  <button onClick={() => handleComplete(task.id)}>Mark Done</button>
-                )}
-              </div>
+      <div className="my-tasks-grid">
+        {myTasks.length === 0 ? <p>No tasks found.</p> : myTasks.map(task => (
+          <div key={task.id} className={`my-task-card ${task.status === 'Completed' ? 'completed' : ''}`}>
+            <div>
+              <strong style={{ fontSize: '1.2rem' }}>{task.title}</strong>
+              <p style={{ margin: '0.5rem 0', color: '#555' }}>{task.description}</p>
+              <span className="status-badge">{task.status}</span>
             </div>
-          ))}
-        </div>
-      )}
+            {task.status !== 'Completed' && (
+              <button className="btn btn-primary" onClick={() => handleComplete(task.id)}>Mark Done</button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
 
-export default UserDashboard
+export default UserDashboard;
