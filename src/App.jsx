@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import useAuthStore from "./stores/authStore";
 import { initializeUsers } from "./utils/storage";
 import LoginForm from "./components/LoginForm";
+import AdminDashboard from "./components/AdminDashboard";
+import UserDashboard from "./components/UserDashboard";
 
 const App = () => {
-  const {user, logout} = useAuthStore();
+  const { user, logout } = useAuthStore();
   useEffect(() => {
     initializeUsers();
   }, []);
@@ -22,6 +24,9 @@ const App = () => {
               <button onClick={logout}>Logout</button>
             </div>
           </header>
+          <main>
+            {user.role === 'admin' ? <AdminDashboard /> : <UserDashboard />}
+          </main>
         </div>
       )}
     </div>

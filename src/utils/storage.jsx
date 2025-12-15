@@ -19,3 +19,18 @@ export const authenticateUser = (username, password) => {
 export const getUsers = () => {
     return JSON.parse(localStorage.getItem('users') || '[]');
 }
+
+export const getTasks = () => {
+    return JSON.parse(localStorage.getItem('tasks') || '[]');
+};
+
+export const saveTasks = (tasks) => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+};
+
+export const initializeTasks = () => {
+    const tasksExists = localStorage.getItem('tasks');
+    if (!tasksExists) {
+        localStorage.setItem('tasks', JSON.stringify([]));
+    }
+}
